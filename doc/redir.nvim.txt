@@ -30,7 +30,7 @@ FEATURES                                           *redir.nvim-redir-features*
 
 REQUIREMENTS                                   *redir.nvim-redir-requirements*
 
-- Neovim >= 0.7.2
+- Neovim >= 0.8.0
 - Optional: a patched <https://www.nerdfonts.com/> font for better line separator visualization
 
 
