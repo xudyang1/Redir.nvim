@@ -16,7 +16,7 @@ Redirects neovim [cmdline](https://neovim.io/doc/user/cmdline.html) output to a 
 
 ## Requirements
 
-- Neovim >= 0.7.2
+- Neovim >= 0.8.0
 - Optional: a [patched](https://www.nerdfonts.com/) font for better line separator visualization
 
 ## Installation
