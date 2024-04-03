@@ -1,0 +1,61 @@
+name: Bug Report
+description: File a bug/issue
+title: "bug: "
+labels: ["bug", "triage"]
+assignees:
+  - xudyang1
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    attributes:
+      label: Did you check docs and existing issues?
+      description: Make sure you checked all of the below before submitting an issue
+      options:
+        - label: I have read all the redir.nvim [docs](https://github.com/xudyang1/redir.nvim?tab=readme-ov-file#redir)
+          required: true
+        - label: I have searched the existing [issues](https://github.com/xudyang1/redir.nvim/issues) of redir.nvim
+          required: true
+        - label: I have searched the existing [issues](https://github.com/xudyang1/redir.nvim?tab=readme-ov-file#known-issues) of plugins related to this issue
+          required: true
+  - type: input
+    id: neovim-version
+    attributes:
+      label: "Neovim version (nvim -v)"
+      placeholder: "0.8.0 commit db1b0ee3b30f"
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: "Operating system/version"
+      placeholder: "MacOS 11.5"
+    validations:
+      required: true
+  - type: textarea
+    id: describe-the-bug
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: 1,2,3 steps on how to reproduce it
+      value: "1. "
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+      value: "It should work as.."
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+      value: "It should work as.."
+    validations:
+      required: false
