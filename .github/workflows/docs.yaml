@@ -7,6 +7,8 @@ name: docs
 jobs:
   docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     name: pandoc to vimdoc
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +20,7 @@ jobs:
           demojify: true
           treesitter: true
       - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "auto-generate vimdoc"
           commit_user_name: "github-actions[bot]"
