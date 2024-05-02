@@ -42,7 +42,7 @@ function View.is_buf_valid()
   return api.nvim_buf_is_valid(View.bufnr)
 end
 
----Get View bufnr if valid, or create a new buffer, or use the fallback bufnr
+---Get View bufnr if valid, or create a new scratch buffer, or use the fallback bufnr
 ---@param bufnr? integer fallback bufnr
 ---@return integer
 function View.get_valid_bufnr(bufnr)
@@ -59,51 +59,77 @@ function View.close_win()
   View.win_id = -1
 end
 
+---Open window with the layout from `View.current_layout_style`
 function View.open_win()
   View["open_" .. View.current_layout_style]()
 end
 
----Set current win to Redir buffer, or focus the opening Redir win
-function View.win_set_buf()
-  local win_id = View.get_valid_win_id()
-  local bufnr = View.get_valid_bufnr()
+---Focus on Redir window
+---@param win_id? integer
+---@param bufnr? integer
+function View.focus_win_and_buf(win_id, bufnr)
+  win_id = win_id or View.get_valid_win_id()
+  bufnr = bufnr or View.get_valid_bufnr()
+
   api.nvim_win_set_buf(win_id, bufnr)
+  api.nvim_set_current_win(win_id)
 end
 
 function View.open_vertical()
-  if View.current_layout_style ~= LayoutStyle.vertical then
-    View.close_win()
+  if View.is_win_open() then
+    if View.current_layout_style == LayoutStyle.vertical then
+      api.nvim_set_current_win(View.win_id)
+      return
+    else
+      View.close_win()
+    end
   end
 
-  View.current_layout_style = LayoutStyle.vertical
-
   vim.cmd.split({ mods = { vertical = true } })
-  View.win_set_buf()
+  View.focus_win_and_buf()
+  View.current_layout_style = LayoutStyle.vertical
 end
 
 function View.open_horizontal()
-  if View.current_layout_style ~= LayoutStyle.horizontal then
-    View.close_win()
+  if View.is_win_open() then
+    if View.current_layout_style == LayoutStyle.horizontal then
+      api.nvim_set_current_win(View.win_id)
+      return
+    else
+      View.close_win()
+    end
   end
 
-  View.current_layout_style = LayoutStyle.horizontal
-
   vim.cmd.split({ mods = { vertical = false } })
-  View.win_set_buf()
+  View.focus_win_and_buf()
+  View.current_layout_style = LayoutStyle.horizontal
 end
 
 function View.open_tab()
-  if View.current_layout_style ~= LayoutStyle.tab then
-    View.close_win()
+  if View.is_win_open() then
+    if View.current_layout_style == LayoutStyle.tab then
+      api.nvim_set_current_win(View.win_id)
+      return
+    else
+      View.close_win()
+    end
   end
 
-  View.current_layout_style = LayoutStyle.tab
-
   vim.cmd("tabnew")
-  View.win_set_buf()
+  View.focus_win_and_buf()
+  View.current_layout_style = LayoutStyle.tab
 end
 
 function View.open_float()
+  if View.is_win_open() then
+    if View.current_layout_style == LayoutStyle.float then
+      api.nvim_set_current_win(View.win_id)
+      return
+    else
+      View.close_win()
+    end
+  end
+
   local function get_size(max_val, val)
     return val > 1 and math.min(max_val, val) or math.floor(max_val * val)
   end
@@ -130,6 +156,7 @@ function View.open_float()
   }
 
   View.win_id = api.nvim_open_win(View.get_valid_bufnr(), true, View.win_opts)
+  View.current_layout_style = LayoutStyle.float
 end
 
 -- TODO: refactor into cmd logic
