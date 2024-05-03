@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "runtime.version": "LuaJIT",
+  "runtime.pathStrict": false,
+  "workspace.userThirdParty": [".tests/pack/start/plenary.nvim"],
+  "workspace.useGitIgnore": false
+}
