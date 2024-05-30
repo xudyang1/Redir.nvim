@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  unit_tests:
+    name: unit tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-12, windows-2022]
+        rev: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rhysd/action-setup-vim@v1.3.4
+        with:
+          neovim: true
+          version: ${{ matrix.rev }}
+
+      - name: Prepare
+        run: |
+          git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ../plenary.nvim
+          # git clone --depth 1 https://github.com/nvim-tree/nvim-web-devicons ../nvim-web-devicons
+
+      - name: Run tests
+        run: |
+          nvim --version
+          ./tests/run_test.sh

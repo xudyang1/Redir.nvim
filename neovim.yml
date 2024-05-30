@@ -1,0 +1,56 @@
+---
+base: lua51
+
+globals:
+  # neovim
+  vim:
+    any: true
+  jit:
+    any: true
+  # plenary.nvim
+  assert:
+    args:
+      - type: bool
+      - type: string
+        required: false
+  describe:
+    args:
+      - type: string
+      - type: function
+  it:
+    args:
+      - type: string
+      - type: function
+  before_each:
+    args:
+      - type: function
+  after_each:
+    args:
+      - type: function
+  pending:
+    args:
+      - type: string
+      - type: function
+  clear:
+    args:
+      - type: "nil"
+  assert.equals:
+    args:
+      - type: any
+      - type: any
+  assert.spy:
+    args:
+      - type: any
+  assert.stub:
+    args:
+      - type: any
+  # luassert
+  # assert.truthy:
+  #   args:
+  #     - type: any
+  # assert.is_not:
+  #   any: true
+  # assert.are.same:
+  #   args:
+  #     - type: any
+  #     - type: any

@@ -16,10 +16,10 @@ local RedirConfig = {
 }
 
 ---@class RedirOptions
----@field layout_style LayoutStyle output window layout style
----@field output_format RedirOutputFormat by default, input cmd is inserted as a header.
----@field prompt RedirPrompt configure input prompt
----@field layout_config RedirLayoutConfig layout specific configuration, overwrite globals
+---@field layout_style? LayoutStyle output window layout style
+---@field output_format? RedirOutputFormat by default, input cmd is inserted as a header.
+---@field prompt? RedirPrompt configure input prompt
+---@field layout_config? RedirLayoutConfig layout specific configuration, overwrite globals
 local defaults = {
   layout_style = Constants.LayoutStyle.horizontal,
   ---@class RedirOutputFormat
