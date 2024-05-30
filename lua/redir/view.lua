@@ -1,5 +1,6 @@
 local Config = require("redir.config")
 local LayoutStyle = require("redir.constants").LayoutStyle
+local Utils = require("redir.utils")
 local api = vim.api
 
 ---@class RedirView
@@ -161,10 +162,15 @@ end
 
 -- TODO: refactor into cmd logic
 function View.generate_cmd_output(ctx)
+  -- BUG: parse `lua vim.print("abc           e             ef;g")` incorrectly
   local parsed_cmd = api.nvim_parse_cmd(ctx.args, {})
-  local output = api.nvim_cmd(parsed_cmd, { output = true })
-  local lines = vim.split(output, "\n", { plain = true })
+  -- so that api.nvim_cmd may generate incorrect output
+  -- local output = api.nvim_cmd(parsed_cmd, { output = true })
+  local output = api.nvim_exec2(ctx.args, { output = true }).output
+  local lines = Utils.split_lines(output)
 
+  vim.print("parsed:", parsed_cmd)
+  vim.print("ctx:", ctx)
   if parsed_cmd.cmd ~= "!" then
     table.insert(lines, 1, ":" .. ctx.args)
   end
