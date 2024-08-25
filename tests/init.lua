@@ -1,9 +1,11 @@
-local project_root_dir = vim.loop.cwd() .. "/"
+---@diagnostic disable-next-line: undefined-field
+local project_root_dir = vim.uv.cwd() .. "/"
 
 local function load_package(plugin)
   local plugin_name = plugin:match(".*/(.*)")
   local installed_parent_dir = project_root_dir .. ".tests/pack/start/"
   local plugin_installed_path = installed_parent_dir .. plugin_name
+  ---@diagnostic disable-next-line: undefined-field
   if not (vim.uv or vim.loop).fs_stat(plugin_installed_path) then
     print("Installing package " .. plugin .. "...")
     vim.fn.mkdir(installed_parent_dir, "p")
