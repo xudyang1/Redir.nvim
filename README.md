@@ -2,7 +2,7 @@
 
 # Redir
 
-Redirects neovim [cmdline](https://neovim.io/doc/user/cmdline.html) output to a modifiable buffer.
+Redirects neovim's [cmdline](https://neovim.io/doc/user/cmdline.html) output to a modifiable buffer.
 
 ## Features
 
@@ -14,7 +14,7 @@ Redirects neovim [cmdline](https://neovim.io/doc/user/cmdline.html) output to a 
 
 ## Requirements
 
-- Neovim >= 0.8.0
+- Latest stable neovim (v0.10.1)
 
 ## Installation
 
@@ -98,15 +98,3 @@ vim.keymap.set("n", "<Leader>rt", require("redir").open_tab, { desc = "Redir: op
 -- you can use `:q` instead of the following keymap
 vim.keymap.set("n", "<Leader>rc", require("redir").close_win, { desc = "Redir: close win"})
 ```
-
-## Known Issues
-
-If you use [cmp-cmdline](https://github.com/hrsh7th/cmp-cmdline) to enable autocompletion in cmdline mode, please note that you may experience input hanging with `Redir !shellcmd`.
-
-For example:
-
-```txt
-:Redir !ls # <- input hanging may occur, press ctrl-c to kill the cmp-cmdline completion process
-```
-
-This is a known bug in [cmp-cmdline](https://github.com/hrsh7th/cmp-cmdline/issues/109)
