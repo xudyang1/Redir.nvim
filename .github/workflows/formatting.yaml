@@ -1,0 +1,24 @@
+---
+name: Formatting
+
+on: workflow_call
+
+jobs:
+  formatting:
+    name: stylua
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: run stylua
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          # CLI arguments
+          args: --color always --check lua/ tests/
+
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "style: apply automated formatting"
