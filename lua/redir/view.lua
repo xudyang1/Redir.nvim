@@ -169,8 +169,6 @@ function View.generate_cmd_output(ctx)
   local output = api.nvim_exec2(ctx.args, { output = true }).output
   local lines = Utils.split_lines(output)
 
-  vim.print("parsed:", parsed_cmd)
-  vim.print("ctx:", ctx)
   if parsed_cmd.cmd ~= "!" then
     table.insert(lines, 1, ":" .. ctx.args)
   end
@@ -203,7 +201,5 @@ end, {
   -- @bug: `:Redir !shellcommand` results in hanging, ^C kills the completion
   complete = "command",
 })
-
-vim.keymap.set("n", "<Leader>ms", View.open_win, { desc = "Open Message" })
 
 return View
