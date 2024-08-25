@@ -45,12 +45,12 @@ globals:
     args:
       - type: any
   # luassert
-  # assert.truthy:
-  #   args:
-  #     - type: any
-  # assert.is_not:
-  #   any: true
-  # assert.are.same:
-  #   args:
-  #     - type: any
-  #     - type: any
+  assert.truthy:
+    args:
+      - type: any
+  assert.is_not:
+    any: true
+  assert.are_same:
+    args:
+      - type: any
+      - type: any
