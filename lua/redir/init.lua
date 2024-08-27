@@ -14,4 +14,5 @@ return {
   open_horizontal = View.open_horizontal,
   open_tab = View.open_tab,
   close = View.close,
+  config = Config,
 }

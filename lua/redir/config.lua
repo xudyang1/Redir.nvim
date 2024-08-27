@@ -11,7 +11,7 @@ local Constants = require("redir.constants")
 ---@class RedirConfig
 ---@field version string
 ---@field options RedirOptions
-local RedirConfig = {
+local Config = {
   version = "0.0.1",
 }
 
@@ -21,6 +21,7 @@ local RedirConfig = {
 ---@field prompt? RedirPrompt configure input prompt
 ---@field layout_config? RedirLayoutConfig layout specific configuration, overwrite globals
 local defaults = {
+Config.defaults = {
   layout_style = Constants.LayoutStyle.horizontal,
   ---@class RedirOutputFormat
   ---@field header boolean | string | fun(opts: table): string insert a header before each output body
@@ -81,9 +82,12 @@ local defaults = {
 
 ---setup configuration options
 ---@param opts? RedirOptions
-function RedirConfig.setup(opts)
+function Config.setup(opts)
   opts = opts or {}
-  RedirConfig.options = vim.tbl_deep_extend("force", defaults, opts)
+  if Config.options == nil then
+    Config.options = Config.defaults
+  end
+  Config.options = vim.tbl_deep_extend("force", Config.options, opts)
 end
 
-return RedirConfig
+return Config
