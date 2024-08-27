@@ -53,7 +53,7 @@ function View.get_valid_bufnr(bufnr)
   return View.bufnr
 end
 
-function View.close_win()
+function View.close()
   if View.is_win_open() then
     api.nvim_win_close(View.win_id, false)
   end
@@ -61,7 +61,7 @@ function View.close_win()
 end
 
 ---Open window with the layout from `View.current_layout_style`
-function View.open_win()
+function View.open()
   View["open_" .. View.current_layout_style]()
 end
 
@@ -82,7 +82,7 @@ function View.open_vertical()
       api.nvim_set_current_win(View.win_id)
       return
     else
-      View.close_win()
+      View.close()
     end
   end
 
@@ -97,7 +97,7 @@ function View.open_horizontal()
       api.nvim_set_current_win(View.win_id)
       return
     else
-      View.close_win()
+      View.close()
     end
   end
 
@@ -112,7 +112,7 @@ function View.open_tab()
       api.nvim_set_current_win(View.win_id)
       return
     else
-      View.close_win()
+      View.close()
     end
   end
 
@@ -127,7 +127,7 @@ function View.open_float()
       api.nvim_set_current_win(View.win_id)
       return
     else
-      View.close_win()
+      View.close()
     end
   end
 
@@ -173,7 +173,7 @@ function View.generate_cmd_output(ctx)
     table.insert(lines, 1, ":" .. ctx.args)
   end
 
-  View.open_win()
+  View.open()
 
   -- TODO: refactor into standalone function
   local is_empty = api.nvim_buf_line_count(View.bufnr) == 1 and api.nvim_buf_get_offset(View.bufnr, 1) <= 1
