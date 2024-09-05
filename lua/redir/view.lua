@@ -248,6 +248,7 @@ function View.generate_cmd_output(ctx)
   api.nvim_buf_set_lines(View.bufnr, is_empty and 0 or -1, -1, false, lines)
   api.nvim_win_set_cursor(View.win_id, { api.nvim_buf_line_count(View.bufnr), 0 })
   vim.opt_local.modified = false
+  vim.opt_local.wrap = true
 end
 
 api.nvim_create_user_command("Redir", function(ctx)
