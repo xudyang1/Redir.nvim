@@ -138,7 +138,7 @@ Example keybindings:
 
 >lua
     -- Lua
-    vim.keymap.set("n", "<Leader>tr", function() require("redir").toggle() end, { desc = "Redir: toggle"})
+    vim.keymap.set("n", "<Leader>rr", function() require("redir").toggle() end, { desc = "Redir: toggle"})
     vim.keymap.set("n", "<Leader>re", function() require("redir").open() end, { desc = "Redir: open win"})
     vim.keymap.set("n", "<Leader>rh", function() require("redir").open_horizontal() end, { desc = "Redir: open horizontal"})
     vim.keymap.set("n", "<Leader>rv", function() require("redir").open_vertical() end, { desc = "Redir: open vertical"})
