@@ -4,6 +4,8 @@
 
 Redirects neovim's [cmdline](https://neovim.io/doc/user/cmdline.html) output to a modifiable buffer.
 
+![redir](./assets/redir_screenshot.png "redir screenshot")
+
 ## Features
 
 - multiple layouts: vertical/horizontal split, floating window, tab window
