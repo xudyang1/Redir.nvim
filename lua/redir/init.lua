@@ -8,10 +8,12 @@ end
 
 return {
   setup = setup,
-  open_win = View.open_win,
+  open = View.open,
   open_float = View.open_float,
   open_vertical = View.open_vertical,
   open_horizontal = View.open_horizontal,
   open_tab = View.open_tab,
-  close_win = View.close_win,
+  close = View.close,
+  toggle = View.toggle,
+  config = Config,
 }

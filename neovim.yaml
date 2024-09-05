@@ -48,9 +48,18 @@ globals:
   assert.truthy:
     args:
       - type: any
-  assert.is_not:
-    any: true
+  assert.is_nil:
+    args:
+      - type: any
+  assert.True:
+    args:
+      - type: any
+  assert.False:
+    args:
+      - type: any
   assert.are_same:
     args:
       - type: any
       - type: any
+  assert.is_not:
+    any: true

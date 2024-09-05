@@ -21,10 +21,32 @@ describe("Utils", function()
     local carriage_newline_command_output = get_fake_command_output("\r\n")
 
     it("reads command output with newline only", function()
-      assert.are.same(expect, Utils.split_lines(newline_command_output))
+      assert.are_same(expect, Utils.split_lines(newline_command_output))
     end)
     it("reads command output with carriage return and newline", function()
-      assert.are.same(expect, Utils.split_lines(carriage_newline_command_output))
+      assert.are_same(expect, Utils.split_lines(carriage_newline_command_output))
+    end)
+  end)
+
+  describe("get_size", function()
+    it("should return nil if input size is invalid", function()
+      assert.is_nil(Utils.get_size(10, 0))
+    end)
+    it("should return floor of size when it is less than max_val", function()
+      local max_val = 10
+      local val = 5.5
+      assert.are_same(math.floor(val), Utils.get_size(max_val, val))
+
+      val = 8
+      assert.are_same(math.floor(val), Utils.get_size(max_val, val))
+    end)
+    it("should return max_val when val is greater than max_val", function()
+      local max_val = 10
+      local val = 15.5
+      assert.are_same(max_val, Utils.get_size(max_val, val))
+
+      val = 18
+      assert.are_same(max_val, Utils.get_size(max_val, val))
     end)
   end)
 end)
