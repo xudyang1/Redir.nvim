@@ -7,56 +7,58 @@
 local Constants = require("redir.constants")
 
 ---@class RedirConfig
----@field version string
 ---@field options RedirOptions
-local Config = {
-  version = "0.0.1",
-}
+---@field defaults RedirOptions
+local Config = {}
 
 ---@class RedirOptions
----@field buffer_name? string Buffer name displayed
----@field layout_style? LayoutStyle Output window layout style
----@field output_format? RedirOutputFormat By default, input cmd is inserted as a header.
----@field attach? fun(burnr: integer) Called after opening the redir buffer
----@field layout_config? RedirLayoutConfig Layout specific configuration, overwrite globals
--- TODO: ---@field prompt? RedirPrompt configure input prompt
+---@field global_config? RedirGlobalConfig Global configuration
+---@field layout_config? RedirLayoutConfigs Layout specific configuration, overwrites global_config for each layout style
 Config.defaults = {
-  buffer_name = "Redir",
-  layout_style = Constants.LayoutStyle.horizontal,
-  ---@class RedirOutputFormat
-  ---@field header? SeparatorWrapper Content separator before each output body
-  ---@field footer? SeparatorWrapper Content separator after each output body
-  output_format = {
-    ---@alias Separator string | fun(opts: table): string?
-    ---@class SeparatorWrapper
-    ---@field enabled? boolean Enable or disable the separator
-    ---@field separator? Separator Content of the separator
-    header = {
-      enabled = true,
-      ---@param opts table A single table argument used in command function from vim.api.nvim_create_user_command
-      separator = function(opts)
-        if opts.fargs[1] and string.sub(opts.fargs[1], 1, 1) == "!" then
-          return
-        end
-        return opts.args
-      end,
+  ---@class RedirGlobalConfig
+  ---@field buffer_name? string Buffer name displayed
+  ---@field default_layout? LayoutStyle Default output window layout style
+  ---@field output_format? RedirOutputFormat By default, input cmd is inserted as a header.
+  ---@field attach? fun(burnr: integer) Called after opening the redir buffer
+  -- TODO: ---@field prompt? RedirPrompt configure input prompt
+  global_config = {
+    buffer_name = "Redir",
+    default_layout = Constants.LayoutStyle.horizontal,
+    ---@class RedirOutputFormat
+    ---@field header? SeparatorWrapper Content separator before each output body
+    ---@field footer? SeparatorWrapper Content separator after each output body
+    output_format = {
+      ---@alias Separator string | fun(opts: table): string?
+      ---@class SeparatorWrapper
+      ---@field enabled? boolean Enable or disable the separator
+      ---@field separator? Separator Content of the separator
+      header = {
+        enabled = true,
+        ---@param opts table A single table argument used in command function from vim.api.nvim_create_user_command
+        separator = function(opts)
+          if opts.fargs[1] and string.sub(opts.fargs[1], 1, 1) == "!" then
+            return
+          end
+          return opts.args
+        end,
+      },
+      ---@class SeparatorWrapper
+      footer = {
+        enabled = false,
+        separator = nil,
+      },
     },
-    ---@class SeparatorWrapper
-    footer = {
-      enabled = false,
-      separator = nil,
-    },
+    attach = nil,
+    -- ---@class RedirPrompt
+    -- ---@field prompt_style? PromptStyle
+    -- ---@field prompt_string? String
+    -- prompt = {
+    --   prompt_style = Constants.PromptStyle.cmdline,
+    --   prompt_string = "Redir",
+    --   -- display_CR?
+    -- },
   },
-  attach = nil,
-  -- ---@class RedirPrompt
-  -- ---@field prompt_style? PromptStyle
-  -- ---@field prompt_string? String
-  -- prompt = {
-  --   prompt_style = Constants.PromptStyle.cmdline,
-  --   prompt_string = "Redir",
-  --   -- display_CR?
-  -- },
-  ---@class RedirLayoutConfig
+  ---@class RedirLayoutConfigs
   ---@field vertical? RedirLayoutVertical Vertical layout style options
   ---@field horizontal? RedirLayoutHorizontal Horizontal layout style options
   ---@field float? RedirLayoutFloat Floating layout style options
@@ -64,16 +66,19 @@ Config.defaults = {
   layout_config = {
     ---@class RedirLayoutVertical
     ---@field width? number Percentage of screen width if value <= 1; or, number of columns if width > 1
+    ---@field attach? fun(burnr: integer) Called after opening the redir buffer
     vertical = {
       width = nil,
     },
     ---@class RedirLayoutHorizontal
     ---@field height? number Percentage of screen height if value <= 1; or, number of lines if height > 1
+    ---@field attach? fun(burnr: integer) Called after opening the redir buffer
     horizontal = {
       height = nil,
     },
     ---@class RedirLayoutFloat
     ---@field win_opts? WinConfig Partial of vim.api.keyset.win_config, @see nvim_open_win
+    ---@field attach? fun(burnr: integer) Called after opening the redir buffer
     float = {
       ---@alias BorderCharArray string[] A char array of length 8 or any divisor of 8 @see |nvim_open_win()|
       ---@alias BorderStyle "none" | "single" | "double" | "rounded" | "solid" | "shadow" | BorderCharArray
@@ -92,6 +97,7 @@ Config.defaults = {
       },
     },
     ---@class RedirLayoutTab
+    ---@field attach? fun(burnr: integer) Called after opening the redir buffer
     tab = {},
   },
 }
