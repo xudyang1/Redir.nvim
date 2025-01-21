@@ -1,9 +1,7 @@
 ---
 on:
-  push:
-    branches:
-      - main
   pull_request_target:
+
 name: docs
 
 jobs:
@@ -14,12 +12,15 @@ jobs:
     name: pandoc to vimdoc
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
 
       - name: panvimdoc
         uses: kdheepak/panvimdoc@main
         with:
           vimdoc: redir.nvim
-          version: "NVIM v0.8.0"
+          version: "NVIM v0.10.3"
           demojify: true
           treesitter: true
 
