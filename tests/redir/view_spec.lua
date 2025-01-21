@@ -17,10 +17,10 @@ describe("View", function()
   describe("View.setup", function()
     it("should setup default layout style", function()
       Redir.setup()
-      assert.are_same(Config.defaults.layout_style, View.current_layout_style)
+      assert.are_same(Config.defaults.global_config.default_layout, View.current_layout_style)
     end)
     it("should setup custom layout style", function()
-      Redir.setup({ layout_style = Constants.LayoutStyle.float })
+      Redir.setup({ global_config = { default_layout = Constants.LayoutStyle.float } })
       assert.are_same(Constants.LayoutStyle.float, View.current_layout_style)
     end)
   end)
@@ -67,9 +67,11 @@ describe("View", function()
     it("should call custom attach function", function()
       local called = 0
       Redir.setup({
-        attach = function()
-          called = called + 1
-        end,
+        global_config = {
+          attach = function()
+            called = called + 1
+          end,
+        },
       })
 
       Redir.open()
@@ -90,12 +92,14 @@ describe("View", function()
       Redir.setup()
       Redir.open()
 
-      assert.are_same(Config.defaults.layout_style, View.current_layout_style)
+      assert.are_same(Config.defaults.global_config.default_layout, View.current_layout_style)
     end)
     it("should open custom layout style with custom config", function()
       local win_width = 20
       Redir.setup({
-        layout_style = Constants.LayoutStyle.vertical,
+        global_config = {
+          default_layout = Constants.LayoutStyle.vertical,
+        },
         layout_config = { vertical = { width = win_width } },
       })
       Redir.open()
