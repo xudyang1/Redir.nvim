@@ -27,6 +27,7 @@ jobs:
           # git clone --depth 1 https://github.com/nvim-tree/nvim-web-devicons ../nvim-web-devicons
 
       - name: run tests
+        shell: bash
         run: |
           nvim --version
           ./tests/run_test.sh
