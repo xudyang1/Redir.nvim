@@ -1,24 +1,22 @@
 ---
-name: Release
+name: Release Please
+
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release:
-    name: Release pushed tag
-    runs-on: ubuntu-22.04
+    name: release
+    runs-on: ubuntu-latest
     steps:
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-        run: |
-          gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-              --generate-notes
+      - uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.PAT }}
+          release-type: simple
