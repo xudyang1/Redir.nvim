@@ -1,8 +1,6 @@
 ---
 on:
-  push:
-    branches:
-      - main
+  pull_request:
 
 name: docs
 
@@ -15,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
           ref: ${{ github.head_ref }}
 
       - name: panvimdoc
