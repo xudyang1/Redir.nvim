@@ -1,9 +1,10 @@
-*redir.nvim.txt*         For NVIM v0.8.0        Last change: 2024 September 05
+*redir.nvim.txt*          For NVIM v0.8.0         Last change: 2025 January 22
 
 ==============================================================================
 Table of Contents                               *redir.nvim-table-of-contents*
 
 1. Redir                                                    |redir.nvim-redir|
+  - Motivation                                   |redir.nvim-redir-motivation|
   - Features                                       |redir.nvim-redir-features|
   - Requirements                               |redir.nvim-redir-requirements|
   - Installation                               |redir.nvim-redir-installation|
@@ -17,18 +18,25 @@ Table of Contents                               *redir.nvim-table-of-contents*
 Redirects neovim’s |cmdline| output to a modifiable buffer.
 
 
+MOTIVATION                                       *redir.nvim-redir-motivation*
+
+Neovim’s native |hit-enter prompt| does not allow text copying. redir.nvim
+<https://github.com/xudyang1/redir.nvim> provides flexibility for text
+manipulation of neovim’s output (copying error messages, debugging info, and
+etc).
+
+
 FEATURES                                           *redir.nvim-redir-features*
 
-- multiple layouts: vertical/horizontal split, floating window, tab window
-- allows quick copying, editing, and searching of text on the output buffer
-- keeps a history of input and output on the buffer for the entire session
+- flexible layouts: vertical/horizontal split, floating window, tab window
 - switch between layouts
-- supports all `Ex` commands
+- quick copying, editing, and searching of text on the output buffer
+- supports all `Ex` commands output
 
 
 REQUIREMENTS                                   *redir.nvim-redir-requirements*
 
-- Latest stable neovim (v0.10.1)
+- Latest stable neovim (v0.10.2)
 
 
 INSTALLATION                                   *redir.nvim-redir-installation*
@@ -37,12 +45,13 @@ INSTALLATION                                   *redir.nvim-redir-installation*
 
 >lua
     return {
-        "xudyang1/redir.nvim",
-        opts = {
-          -- your configuration options...
-          -- leave it empty to use the default settings
-          -- refer to the configuration section below
-        }
+      "xudyang1/redir.nvim",
+      cmd = "Redir",
+      opts = {
+        -- your configuration options...
+        -- leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
     }
 <
 
@@ -54,41 +63,44 @@ A COMPLETE LIST OF CONFIGURATION OPTIONS AND DEFAULT VALUES ~
 
 >lua
     ---@class RedirOptions
-    ---@field buffer_name? string Buffer name displayed
-    ---@field layout_style? LayoutStyle Output window layout style
-    ---@field output_format? RedirOutputFormat By default, input cmd is inserted as a header.
-    ---@field attach? fun(burnr: integer) Called after opening the redir buffer
-    ---@field layout_config? RedirLayoutConfig Layout specific configuration, overwrite globals
+    ---@field global_config? RedirGlobalConfig Global configuration
+    ---@field layout_config? RedirLayoutConfigs Layout specific configuration, overwrites global_config for each layout style
     {
-      buffer_name = "Redir",
-      ---@type "horizontal" | "vertical" | "float" | "tab" Default layout style
-      layout_style = "horizontal",
-      ---@class RedirOutputFormat
-      ---@field header? SeparatorWrapper Content separator before each output body
-      ---@field footer? SeparatorWrapper Content separator after each output body
-      output_format = {
-        ---@alias Separator string | fun(opts: table): string?
-        ---@class SeparatorWrapper
-        ---@field enabled? boolean Enable or disable the separator
-        ---@field separator? Separator Content of the separator
-        header = {
-          enabled = true,
-          ---@param opts table A single table argument used in command function from vim.api.nvim_create_user_command
-          separator = function(opts)
-            if opts.fargs[1] and string.sub(opts.fargs[1], 1, 1) == "!" then
-              return
-            end
-            return opts.args
-          end,
+      ---@class RedirGlobalConfig
+      ---@field buffer_name? string Buffer name displayed
+      ---@field default_layout? LayoutStyle Output window layout style
+      ---@field output_format? RedirOutputFormat By default, input cmd is inserted as a header.
+      ---@field attach? fun(burnr: integer) Called after opening the redir buffer
+      global_config = {
+        buffer_name = "Redir",
+        default_layout = Constants.LayoutStyle.horizontal,
+        ---@class RedirOutputFormat
+        ---@field header? SeparatorWrapper Content separator before each output body
+        ---@field footer? SeparatorWrapper Content separator after each output body
+        output_format = {
+          ---@alias Separator string | fun(opts: table): string?
+          ---@class SeparatorWrapper
+          ---@field enabled? boolean Enable or disable the separator
+          ---@field separator? Separator Content of the separator
+          header = {
+            enabled = true,
+            ---@param opts table A single table argument used in command function from vim.api.nvim_create_user_command
+            separator = function(opts)
+              if opts.fargs[1] and string.sub(opts.fargs[1], 1, 1) == "!" then
+                return
+              end
+              return opts.args
+            end,
+          },
+          ---@class SeparatorWrapper
+          footer = {
+            enabled = false,
+            separator = nil,
+          },
         },
-        ---@class SeparatorWrapper
-        footer = {
-          enabled = false,
-          separator = nil,
-        },
+        attach = nil,
       },
-      attach = nil,
-      ---@class RedirLayoutConfig
+      ---@class RedirLayoutConfigs
       ---@field vertical? RedirLayoutVertical Vertical layout style options
       ---@field horizontal? RedirLayoutHorizontal Horizontal layout style options
       ---@field float? RedirLayoutFloat Floating layout style options
@@ -96,16 +108,19 @@ A COMPLETE LIST OF CONFIGURATION OPTIONS AND DEFAULT VALUES ~
       layout_config = {
         ---@class RedirLayoutVertical
         ---@field width? number Percentage of screen width if value <= 1; or, number of columns if width > 1
+        ---@field attach? fun(burnr: integer) Called after opening the redir buffer
         vertical = {
           width = nil,
         },
         ---@class RedirLayoutHorizontal
         ---@field height? number Percentage of screen height if value <= 1; or, number of lines if height > 1
+        ---@field attach? fun(burnr: integer) Called after opening the redir buffer
         horizontal = {
           height = nil,
         },
         ---@class RedirLayoutFloat
         ---@field win_opts? WinConfig Partial of vim.api.keyset.win_config, @see nvim_open_win
+        ---@field attach? fun(burnr: integer) Called after opening the redir buffer
         float = {
           ---@alias BorderCharArray string[] A char array of length 8 or any divisor of 8 @see |nvim_open_win()|
           ---@alias BorderStyle "none" | "single" | "double" | "rounded" | "solid" | "shadow" | BorderCharArray
@@ -124,6 +139,7 @@ A COMPLETE LIST OF CONFIGURATION OPTIONS AND DEFAULT VALUES ~
           },
         },
         ---@class RedirLayoutTab
+        ---@field attach? fun(burnr: integer) Called after opening the redir buffer
         tab = {},
       },
     }
@@ -133,19 +149,41 @@ A COMPLETE LIST OF CONFIGURATION OPTIONS AND DEFAULT VALUES ~
 USAGE                                                 *redir.nvim-redir-usage*
 
 
-COMMANDS ~
-
-Example keybindings:
+RECOMMENDED CONFIGURATION ~
 
 >lua
-    -- Lua
-    vim.keymap.set("n", "<Leader>rr", function() require("redir").toggle() end, { desc = "Redir: toggle"})
-    vim.keymap.set("n", "<Leader>re", function() require("redir").open() end, { desc = "Redir: open win"})
-    vim.keymap.set("n", "<Leader>rh", function() require("redir").open_horizontal() end, { desc = "Redir: open horizontal"})
-    vim.keymap.set("n", "<Leader>rv", function() require("redir").open_vertical() end, { desc = "Redir: open vertical"})
-    vim.keymap.set("n", "<Leader>rf", function() require("redir").open_float() end, { desc = "Redir: open float"})
-    vim.keymap.set("n", "<Leader>rt", function() require("redir").open_tab() end, { desc = "Redir: open tab"})
-    vim.keymap.set("n", "<Leader>rc", function() require("redir").close() end, { desc = "Redir: close win"})
+    return {
+      "xudyang1/redir.nvim",
+      lazy = true,
+      cmd = "Redir",
+      keys = {
+        { "<Leader>re", function() require("redir").open() end, desc = "Redir: open win" },
+        { "<Leader>rr", function() require("redir").toggle() end, desc = "Redir: toggle" },
+        { "<Leader>rh", function() require("redir").open_horizontal() end, desc = "Redir: open horizontal" },
+        { "<Leader>rv", function() require("redir").open_vertical() end, desc = "Redir: open vertical" },
+        { "<Leader>rf", function() require("redir").open_float() end, desc = "Redir: open float" },
+        { "<Leader>rt", function() require("redir").open_tab() end, desc = "Redir: open tab" },
+        { "<Leader>rc", function() require("redir").close() end, desc = "Redir: close win" },
+        { "<Leader>rC", function() require("redir").clear() end, desc = "Redir: clear" },
+      },
+      opts = {},
+    },
+<
+
+
+API ~
+
+>lua
+    local redir = require("redir")
+    
+    redir.open() -- open redir window
+    redir.toggle() -- toggle redir window
+    redir.open_horizontal() -- open horizontal view
+    redir.open_vertical() -- open vertical view
+    redir.open_float() -- open float view
+    redir.open_tab() -- open tab view
+    redir.close() -- close redir window
+    redir.clear() -- clear redir buffer
 <
 
 ==============================================================================
