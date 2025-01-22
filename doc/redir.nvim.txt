@@ -1,4 +1,4 @@
-*redir.nvim.txt*          For NVIM v0.8.0         Last change: 2025 January 22
+*redir.nvim.txt*         For NVIM v0.10.3         Last change: 2025 January 22
 
 ==============================================================================
 Table of Contents                               *redir.nvim-table-of-contents*
@@ -36,7 +36,7 @@ FEATURES                                           *redir.nvim-redir-features*
 
 REQUIREMENTS                                   *redir.nvim-redir-requirements*
 
-- Latest stable neovim (v0.10.2)
+- Latest stable neovim (v0.10.3)
 
 
 INSTALLATION                                   *redir.nvim-redir-installation*
