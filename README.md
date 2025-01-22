@@ -19,7 +19,7 @@ Neovim's native [hit-enter prompt](https://neovim.io/doc/user/message.html#hit-e
 
 ## Requirements
 
-- Latest stable neovim (v0.10.2)
+- Latest stable neovim (v0.10.3)
 
 ## Installation
 
