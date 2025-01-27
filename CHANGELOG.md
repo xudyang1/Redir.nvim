@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/xudyang1/redir.nvim/compare/v1.0.0...v1.0.1) (2025-01-27)
+
+
+### Bug Fixes
+
+* **github:** rename config.yaml to config.yml ([0d2c346](https://github.com/xudyang1/redir.nvim/commit/0d2c3461aa1216dd8368f2305c2c054bf4ee1b6c))
+* **github:** rename config.yaml to config.yml ([0d2c346](https://github.com/xudyang1/redir.nvim/commit/0d2c3461aa1216dd8368f2305c2c054bf4ee1b6c))
+
 ## 1.0.0 (2025-01-22)
 
 
